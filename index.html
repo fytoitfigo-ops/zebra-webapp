@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Zebra Makeup Mini App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #fff5f8;
+        }
+        button {
+            padding: 15px;
+            font-size: 18px;
+            background: #ff4f81;
+            color: white;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>🦓 Zebra Makeup</h2>
+<p>Тестовый Mini App</p>
+
+<button onclick="sendData()">Отправить данные в бота</button>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function sendData() {
+        const data = {
+            step: "test",
+            makeup: "basic",
+            message: "Mini App работает"
+        };
+
+        tg.sendData(JSON.stringify(data));
+    }
+</script>
+
+</body>
+</html>
