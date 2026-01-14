@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Zebra Makeup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Telegram WebApp -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f0f0f0;
-      color: #111;
     }
 
     #app {
@@ -28,12 +25,9 @@
     }
 
     .card {
-      background: #ffffff;
       border-radius: 18px;
       padding: 18px;
       margin-bottom: 14px;
-      border: 1px solid #e0e0e0;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       cursor: pointer;
       transition: transform 0.1s ease;
     }
@@ -50,50 +44,63 @@
 
     .card-desc {
       font-size: 14px;
-      color: #666;
+      opacity: 0.7;
     }
 
     ol {
       padding-left: 20px;
+      font-size: 16px;
     }
 
     li {
       margin-bottom: 8px;
-      font-size: 16px;
     }
   </style>
 </head>
 
 <body>
-  <div id="app">
-    <h1>Выбери макияж</h1>
-
-    <div class="card" onclick="openMakeup('day')">
-      <div class="card-title">💄 Дневной макияж</div>
-      <div class="card-desc">Лёгкий и естественный образ</div>
-    </div>
-
-    <div class="card" onclick="openMakeup('evening')">
-      <div class="card-title">🌙 Вечерний макияж</div>
-      <div class="card-desc">Ярко и выразительно</div>
-    </div>
-
-    <div class="card" onclick="openMakeup('wedding')">
-      <div class="card-title">👰 Свадебный макияж</div>
-      <div class="card-desc">Нежный и стойкий</div>
-    </div>
-  </div>
+  <div id="app"></div>
 
   <script>
     const tg = Telegram.WebApp;
     tg.ready();
     tg.expand();
 
+    const bg = tg.themeParams.bg_color || "#ffffff";
+    const text = tg.themeParams.text_color || "#000000";
+    const cardBg = tg.themeParams.secondary_bg_color || "#f2f2f2";
+
+    document.body.style.background = bg;
+    document.body.style.color = text;
+
     const app = document.getElementById("app");
+
+    function renderMain() {
+      tg.BackButton.hide();
+
+      app.innerHTML = `
+        <h1>Выбери макияж</h1>
+
+        <div class="card" style="background:${cardBg}" onclick="openMakeup('day')">
+          <div class="card-title">💄 Дневной макияж</div>
+          <div class="card-desc">Лёгкий и естественный образ</div>
+        </div>
+
+        <div class="card" style="background:${cardBg}" onclick="openMakeup('evening')">
+          <div class="card-title">🌙 Вечерний макияж</div>
+          <div class="card-desc">Ярко и выразительно</div>
+        </div>
+
+        <div class="card" style="background:${cardBg}" onclick="openMakeup('wedding')">
+          <div class="card-title">👰 Свадебный макияж</div>
+          <div class="card-desc">Нежный и стойкий</div>
+        </div>
+      `;
+    }
 
     function openMakeup(type) {
       tg.BackButton.show();
-      tg.BackButton.onClick(() => location.reload());
+      tg.BackButton.onClick(renderMain);
 
       let title = "";
       let steps = [];
@@ -134,10 +141,12 @@
       app.innerHTML = `
         <h1>${title}</h1>
         <ol>
-          ${steps.map(step => `<li>${step}</li>`).join("")}
+          ${steps.map(s => `<li>${s}</li>`).join("")}
         </ol>
       `;
     }
+
+    renderMain();
   </script>
 </body>
 </html>
