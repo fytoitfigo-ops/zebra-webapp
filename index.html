@@ -4,19 +4,23 @@
   <meta charset="UTF-8">
   <title>Zebra Makeup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #121212;
+      color: #ffffff;
     }
 
     #app {
       padding: 16px;
       min-height: 100vh;
-      box-sizing: border-box;
     }
 
     h1 {
@@ -25,15 +29,19 @@
     }
 
     .card {
+      background: #1e1e1e;
       border-radius: 18px;
       padding: 18px;
       margin-bottom: 14px;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       cursor: pointer;
-      transition: transform 0.1s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
     .card:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.6);
     }
 
     .card-title {
@@ -44,109 +52,112 @@
 
     .card-desc {
       font-size: 14px;
+      opacity: 0.8;
+    }
+
+    ul {
+      padding-left: 18px;
+      line-height: 1.7;
+    }
+
+    .step {
+      margin-bottom: 12px;
+    }
+
+    .hint {
+      font-size: 13px;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+
+    .back {
+      margin-bottom: 16px;
+      font-size: 14px;
       opacity: 0.7;
-    }
-
-    ol {
-      padding-left: 20px;
-      font-size: 16px;
-    }
-
-    li {
-      margin-bottom: 8px;
     }
   </style>
 </head>
 
 <body>
-  <div id="app"></div>
+<div id="app"></div>
 
-  <script>
-    const tg = Telegram.WebApp;
-    tg.ready();
-    tg.expand();
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand();
 
-    const bg = tg.themeParams.bg_color || "#ffffff";
-    const text = tg.themeParams.text_color || "#000000";
-    const cardBg = tg.themeParams.secondary_bg_color || "#f2f2f2";
+  const app = document.getElementById("app");
 
-    document.body.style.background = bg;
-    document.body.style.color = text;
-
-    const app = document.getElementById("app");
-
-    function renderMain() {
-      tg.BackButton.hide();
-
-      app.innerHTML = `
-        <h1>Выбери макияж</h1>
-
-        <div class="card" style="background:${cardBg}" onclick="openMakeup('day')">
-          <div class="card-title">💄 Дневной макияж</div>
-          <div class="card-desc">Лёгкий и естественный образ</div>
-        </div>
-
-        <div class="card" style="background:${cardBg}" onclick="openMakeup('evening')">
-          <div class="card-title">🌙 Вечерний макияж</div>
-          <div class="card-desc">Ярко и выразительно</div>
-        </div>
-
-        <div class="card" style="background:${cardBg}" onclick="openMakeup('wedding')">
-          <div class="card-title">👰 Свадебный макияж</div>
-          <div class="card-desc">Нежный и стойкий</div>
-        </div>
-      `;
+  const data = {
+    day: {
+      title: "☀️ Дневной макияж",
+      steps: [
+        { text: "Лёгкий тон", hint: "BB или CC крем, без перегруза" },
+        { text: "Минимальный контуринг", hint: "Едва заметная коррекция" },
+        { text: "Натуральные тени", hint: "Бежевые, персиковые оттенки" },
+        { text: "Тушь", hint: "Один слой" },
+        { text: "Блеск или нюд", hint: "Естественный финиш" }
+      ]
+    },
+    evening: {
+      title: "🌙 Вечерний макияж",
+      steps: [
+        { text: "Плотный тон", hint: "Хорошо выровнять кожу" },
+        { text: "Контуринг", hint: "Скулы, нос, подбородок" },
+        { text: "Смоки-айс", hint: "Тёмные или сияющие тени" },
+        { text: "Подводка", hint: "Чёткая линия" },
+        { text: "Яркая помада", hint: "Акцент на губы" }
+      ]
+    },
+    wedding: {
+      title: "💍 Свадебный макияж",
+      steps: [
+        { text: "Идеальный тон", hint: "Стойкий, фотогеничный" },
+        { text: "Мягкий контуринг", hint: "Без резких линий" },
+        { text: "Сияющие тени", hint: "Розовые, шампань" },
+        { text: "Накладные ресницы", hint: "Естественный объём" },
+        { text: "Стойкая помада", hint: "Не отпечатывается" }
+      ]
     }
+  };
 
-    function openMakeup(type) {
-      tg.BackButton.show();
-      tg.BackButton.onClick(renderMain);
+  function renderHome() {
+    app.innerHTML = `
+      <h1>Выбери макияж</h1>
 
-      let title = "";
-      let steps = [];
+      <div class="card" onclick="openMakeup('day')">
+        <div class="card-title">☀️ Дневной</div>
+        <div class="card-desc">Лёгкий и естественный</div>
+      </div>
 
-      if (type === "day") {
-        title = "💄 Дневной макияж";
-        steps = [
-          "Очищение кожи",
-          "Лёгкий тон",
-          "Натуральные тени",
-          "Тушь",
-          "Блеск для губ"
-        ];
-      }
+      <div class="card" onclick="openMakeup('evening')">
+        <div class="card-title">🌙 Вечерний</div>
+        <div class="card-desc">Яркий и выразительный</div>
+      </div>
 
-      if (type === "evening") {
-        title = "🌙 Вечерний макияж";
-        steps = [
-          "Плотный тон",
-          "Контуринг",
-          "Смоки-айс",
-          "Подводка",
-          "Яркая помада"
-        ];
-      }
+      <div class="card" onclick="openMakeup('wedding')">
+        <div class="card-title">💍 Свадебный</div>
+        <div class="card-desc">Нежный и стойкий</div>
+      </div>
+    `;
+  }
 
-      if (type === "wedding") {
-        title = "👰 Свадебный макияж";
-        steps = [
-          "Подготовка кожи",
-          "Стойкий тон",
-          "Нежные тени",
-          "Фиксация",
-          "Нюдовые губы"
-        ];
-      }
+  function openMakeup(type) {
+    const m = data[type];
+    app.innerHTML = `
+      <div class="back" onclick="renderHome()">← Назад</div>
+      <h1>${m.title}</h1>
+      <ul>
+        ${m.steps.map(s => `
+          <li class="step">
+            ${s.text}
+            <div class="hint">${s.hint}</div>
+          </li>
+        `).join("")}
+      </ul>
+    `;
+  }
 
-      app.innerHTML = `
-        <h1>${title}</h1>
-        <ol>
-          ${steps.map(s => `<li>${s}</li>`).join("")}
-        </ol>
-      `;
-    }
-
-    renderMain();
-  </script>
+  renderHome();
+</script>
 </body>
 </html>
