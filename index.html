@@ -5,7 +5,6 @@
   <title>Zebra Makeup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Telegram WebApp -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
@@ -51,7 +50,6 @@
 
     .step {
       display: flex;
-      align-items: flex-start;
       gap: 12px;
       padding: 14px 0;
       border-bottom: 1px solid #2a2a2a;
@@ -66,10 +64,6 @@
       height: 22px;
       accent-color: #f5c542;
       margin-top: 2px;
-    }
-
-    .step-text {
-      flex: 1;
     }
 
     .step-title {
@@ -98,50 +92,71 @@
 <script>
   const app = document.getElementById("app");
 
-  const eveningMakeup = {
-    title: "🌙 Вечерний макияж",
-    steps: [
-      {
-        title: "Тон лица",
-        desc: "Выровнять кожу, 1–2 слоя"
-      },
-      {
-        title: "Контурирование",
-        desc: "Подчеркнуть скулы, мягкая растушёвка"
-      },
-      {
-        title: "Глаза",
-        desc: "Затемнение века, 2–3 слоя"
-      },
-      {
-        title: "Подводка и ресницы",
-        desc: "Акцент на внешний угол"
-      },
-      {
-        title: "Губы",
-        desc: "Насыщенный акцент"
-      }
-    ]
+  const makeups = {
+    evening: {
+      title: "🌙 Вечерний макияж",
+      steps: [
+        { title: "Тон лица", desc: "Выровнять кожу, 1–2 слоя" },
+        { title: "Контурирование", desc: "Подчеркнуть скулы, мягкая растушёвка" },
+        { title: "Глаза", desc: "Затемнение века, 2–3 слоя" },
+        { title: "Подводка и ресницы", desc: "Акцент на внешний угол" },
+        { title: "Губы", desc: "Насыщенный акцент" }
+      ]
+    },
+    day: {
+      title: "☀️ Дневной макияж",
+      steps: [
+        { title: "Тон лица", desc: "Лёгкое выравнивание, 1 слой" },
+        { title: "Брови", desc: "Естественное заполнение" },
+        { title: "Глаза", desc: "Нюдовые оттенки, 1 слой" },
+        { title: "Ресницы", desc: "Лёгкий акцент" },
+        { title: "Губы", desc: "Натуральный оттенок" }
+      ]
+    },
+    wedding: {
+      title: "💍 Свадебный макияж",
+      steps: [
+        { title: "Подготовка кожи", desc: "Увлажнение + база" },
+        { title: "Тон лица", desc: "Стойкий, но естественный" },
+        { title: "Глаза", desc: "Мягкое сияние, растушёвка" },
+        { title: "Ресницы", desc: "Объём + длина" },
+        { title: "Губы", desc: "Нежный стойкий цвет" }
+      ]
+    }
   };
 
   function showMain() {
     app.innerHTML = `
       <h1>Zebra Makeup</h1>
-      <div class="card" onclick="showEvening()">
+
+      <div class="card" onclick="showMakeup('evening')">
         <div class="card-title">🌙 Вечерний макияж</div>
         <div class="card-desc">Пошаговое выполнение</div>
+      </div>
+
+      <div class="card" onclick="showMakeup('day')">
+        <div class="card-title">☀️ Дневной макияж</div>
+        <div class="card-desc">Лёгкий и естественный</div>
+      </div>
+
+      <div class="card" onclick="showMakeup('wedding')">
+        <div class="card-title">💍 Свадебный макияж</div>
+        <div class="card-desc">Стойкий и нежный</div>
       </div>
     `;
   }
 
-  function showEvening() {
+  function showMakeup(type) {
+    const makeup = makeups[type];
+
     app.innerHTML = `
       <div class="back" onclick="showMain()">← Назад</div>
-      <h1>${eveningMakeup.title}</h1>
-      ${eveningMakeup.steps.map(step => `
+      <h1>${makeup.title}</h1>
+
+      ${makeup.steps.map(step => `
         <div class="step">
           <input type="checkbox">
-          <div class="step-text">
+          <div>
             <div class="step-title">${step.title}</div>
             <div class="step-desc">${step.desc}</div>
           </div>
@@ -150,7 +165,6 @@
     `;
   }
 
-  // Init Telegram
   if (window.Telegram && Telegram.WebApp) {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
