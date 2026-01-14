@@ -1,20 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Zebra Test</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8">
+  <title>Zebra Makeup</title>
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 20px;
+    }
+    button {
+      padding: 14px 18px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      background: #000;
+      color: #fff;
+    }
+  </style>
 </head>
+
 <body>
+  <h1>Zebra WebApp OK</h1>
+  <p>Telegram WebApp подключён</p>
 
-<h1>Zebra WebApp OK</h1>
-<p>Если ты это видишь — WebView работает</p>
+  <button onclick="Telegram.WebApp.close()">Закрыть</button>
 
-<script>
-    const tg = window.Telegram.WebApp;
+  <script>
+    const tg = Telegram.WebApp;
     tg.ready();
-</script>
-
+    tg.expand();
+  </script>
 </body>
 </html>
+
