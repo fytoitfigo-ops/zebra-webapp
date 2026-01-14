@@ -1,44 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Zebra Makeup</title>
+    <title>Zebra Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Telegram WebApp API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            margin: 0;
-            padding: 20px;
-        }
-        button {
-            padding: 15px;
-            font-size: 16px;
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-        }
-    </style>
 </head>
 <body>
 
-<h2>Zebra Makeup</h2>
-<p>Тестовый Mini App</p>
-
-<button onclick="sendData()">Отправить данные в бота</button>
+<h1>Zebra WebApp OK</h1>
+<p>Если ты это видишь — WebView работает</p>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
-
-    function sendData() {
-        tg.sendData("Привет из Mini App Zebra Makeup");
-    }
 </script>
 
 </body>
