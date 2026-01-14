@@ -1,172 +1,71 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Zebra Makeup</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
- <style>
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: transparent;
-  color: #111;
-}
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: transparent;
+      color: #111;
+    }
 
-#app {
-  padding: 16px;
-  background: #f5f5f5;
-  min-height: 100vh;
-}
+    #app {
+      min-height: 100vh;
+      padding: 16px;
+      background: #f5f5f5;
+      box-sizing: border-box;
+    }
 
-h1 {
-  font-size: 26px;
-  margin-bottom: 20px;
-}
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
 
-.card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 18px;
-  margin-bottom: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
 
-.card:active {
-  transform: scale(0.97);
-}
+    .card:active {
+      transform: scale(0.97);
+    }
 
-.card-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
 
-.card-desc {
-  font-size: 14px;
-  color: #666;
-}
+    .card-desc {
+      font-size: 14px;
+      color: #666;
+    }
 
-.steps {
-  padding-left: 20px;
-  font-size: 16px;
-}
+    .steps {
+      padding-left: 20px;
+      font-size: 16px;
+    }
 
-.steps li {
-  margin-bottom: 10px;
-}
-</style>
-
+    .steps li {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Выбери макияж</h1>
-
-  <div class="cards">
-    <div class="card" onclick="openMakeup('day')">
-      <div class="card-title">💄 Дневной макияж</div>
-      <div class="card-desc">Лёгкий и естественный образ</div>
-    </div>
-
-    <div class="card" onclick="openMakeup('evening')">
-      <div class="card-title">🌙 Вечерний макияж</div>
-      <div class="card-desc">Ярко и выразительно</div>
-    </div>
-
-    <div class="card" onclick="openMakeup('wedding')">
-      <div class="card-title">👰 Свадебный макияж</div>
-      <div class="card-desc">Нежный и стойкий</div>
-    </div>
-  </div>
-
-<script>
-const tg = Telegram.WebApp;
-tg.ready();
-tg.expand();
-
-const body = document.body;
-
-// === ГЛАВНЫЙ ЭКРАН ===
-function renderHome() {
-  tg.BackButton.hide();
-
-  body.innerHTML = `
+  <div id="app">
     <h1>Выбери макияж</h1>
 
-    <div class="card" onclick="openMakeup('day')">
-      <div class="card-title">💄 Дневной макияж</div>
-      <div class="card-desc">Лёгкий и естественный образ</div>
-    </div>
-
-    <div class="card" onclick="openMakeup('evening')">
-      <div class="card-title">🌙 Вечерний макияж</div>
-      <div class="card-desc">Ярко и выразительно</div>
-    </div>
-
-    <div class="card" onclick="openMakeup('wedding')">
-      <div class="card-title">💍 Свадебный макияж</div>
-      <div class="card-desc">Нежный и стойкий</div>
-    </div>
-  `;
-}
-
-// === ЭКРАН МАКИЯЖА ===
-function openMakeup(type) {
-  tg.BackButton.show();
-  tg.BackButton.onClick(renderHome);
-
-  let title = '';
-  let steps = [];
-
-  if (type === 'day') {
-    title = '💄 Дневной макияж';
-    steps = [
-      'Очищение кожи',
-      'Лёгкий тон',
-      'Натуральные тени',
-      'Тушь',
-      'Блеск для губ'
-    ];
-  }
-
-  if (type === 'evening') {
-    title = '🌙 Вечерний макияж';
-    steps = [
-      'Плотный тон',
-      'Контуринг',
-      'Смоки-айс',
-      'Подводка',
-      'Яркая помада'
-    ];
-  }
-
-  if (type === 'wedding') {
-    title = '💍 Свадебный макияж';
-    steps = [
-      'Подготовка кожи',
-      'Стойкий тон',
-      'Нежные тени',
-      'Фиксация',
-      'Нюдовые губы'
-    ];
-  }
-
-  body.innerHTML = `
-    <h1>${title}</h1>
-    <ol class="steps">
-      ${steps.map(step => `<li>${step}</li>`).join('')}
-    </ol>
-  `;
-}
-
-// запуск
-renderHome();
-</script>
-</body>
-</html>
-
-
+    <div class="card"
