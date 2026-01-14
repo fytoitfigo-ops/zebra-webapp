@@ -7,13 +7,19 @@
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <style>
+ <style>
 body {
   margin: 0;
-  padding: 16px;
+  padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #f5f5f5;
+  background: transparent;
   color: #111;
+}
+
+#app {
+  padding: 16px;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
 h1 {
@@ -33,7 +39,6 @@ h1 {
 
 .card:active {
   transform: scale(0.97);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
 .card-title {
@@ -56,6 +61,7 @@ h1 {
   margin-bottom: 10px;
 }
 </style>
+
 </head>
 <body>
   <h1>Выбери макияж</h1>
