@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <title>Zebra Makeup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Telegram -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
@@ -23,9 +21,7 @@
       box-sizing: border-box;
     }
 
-    h2 {
-      margin-top: 0;
-    }
+    h2 { margin-top: 0; }
 
     button {
       width: 100%;
@@ -43,7 +39,7 @@
       color: #000;
     }
 
-    .hint, .note, .partner {
+    .hint, .note {
       font-size: 14px;
       opacity: 0.7;
       margin-top: 10px;
@@ -78,6 +74,15 @@
     .actions button {
       flex: 1;
     }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 
@@ -110,38 +115,23 @@
   <p class="hint">
     Хороший свет и нейтральное выражение лица помогут получить лучший результат
   </p>
-  <input type="file" accept="image/*" id="selfieInput">
-  <button onclick="goTips()">Продолжить</button>
+
+  <input type="file" accept="image/*" capture="user" id="selfieInput" style="display:none">
+  <button onclick="openCamera()">Сделать селфи</button>
 </div>
 
 <!-- 5. РЕКОМЕНДАЦИИ -->
 <div id="screen-tips" class="screen">
   <h2>Небольшие рекомендации</h2>
   <p>
-    Чуть усилим взгляд и добавим глубину теням.<br>
-    Тон кожи сделаем более свежим и ровным.<br>
-    Губы подчеркнём мягким, насыщенным оттенком.
+    Мы слегка усилили взгляд и добавили глубину глазам.<br>
+    Тон кожи сделали более свежим и ровным.<br>
+    Губы подчеркнули мягким, выразительным оттенком.
   </p>
-
-  <p class="partner">
-    В образе использованы профессиональные средства визажистов
-  </p>
-
-  <button onclick="tryResult()">Посмотреть результат</button>
+  <button onclick="goResult()">Посмотреть результат</button>
 </div>
 
-<!-- 6. ДОСТУП -->
-<div id="screen-access" class="screen">
-  <h2>Доступ к образам</h2>
-  <p>
-    Ты уже попробовала первую примерку ✨<br>
-    Открой доступ ко всем образам и примеркам
-  </p>
-  <button onclick="alert('Оплата будет доступна позже')">Открыть доступ</button>
-  <button class="secondary" onclick="goSelect()">Позже</button>
-</div>
-
-<!-- 7. РЕЗУЛЬТАТ -->
+<!-- 6. РЕЗУЛЬТАТ -->
 <div id="screen-result" class="screen result">
   <h2>Твой образ готов ✨</h2>
 
@@ -150,21 +140,29 @@
   </div>
 
   <div class="actions">
-    <button onclick="alert('Сохранение доступно в полной версии')">Сохранить</button>
-    <button onclick="alert('Поделиться будет доступно позже')">Поделиться</button>
+    <button onclick="saveImage()">Сохранить</button>
+    <button onclick="shareTelegram()">Поделиться</button>
   </div>
 
-  <p class="note">Первая примерка — бесплатно</p>
+  <button class="secondary" onclick="goFeedback()">Оставить отзыв</button>
+</div>
+
+<!-- 7. ФИДБЭК -->
+<div id="screen-feedback" class="screen">
+  <h2>Нам важно твоё мнение</h2>
+  <p class="hint">
+    Что понравилось? Что бы ты улучшила?
+  </p>
+
+  <textarea placeholder="Напиши пару слов..."></textarea>
+  <button onclick="goSelect()">Отправить</button>
 </div>
 
 <script>
   const tg = window.Telegram.WebApp;
   tg.ready();
 
-  const userId = tg.initDataUnsafe?.user?.id || 'guest';
-
   let selfieImage = null;
-  let freeUsed = localStorage.getItem('freeUsed_' + userId);
 
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -175,21 +173,35 @@
   function goAdult() { show('screen-adult'); }
   function goKids() { show('screen-kids'); }
   function goSelfie() { show('screen-selfie'); }
-  function goTips() { show('screen-tips'); }
+  function goResult() { show('screen-result'); }
+  function goFeedback() { show('screen-feedback'); }
 
-  function tryResult() {
-    if (freeUsed) {
-      show('screen-access');
-    } else {
-      localStorage.setItem('freeUsed_' + userId, 'true');
-      show('screen-result');
-    }
+  function openCamera() {
+    document.getElementById('selfieInput').click();
   }
 
   document.getElementById('selfieInput').addEventListener('change', e => {
-    selfieImage = URL.createObjectURL(e.target.files[0]);
+    const file = e.target.files[0];
+    if (!file) return;
+    selfieImage = URL.createObjectURL(file);
     document.getElementById('resultImage').src = selfieImage;
+    show('screen-tips');
   });
+
+  function saveImage() {
+    const a = document.createElement('a');
+    a.href = selfieImage;
+    a.download = 'zebra-makeup.jpg';
+    a.click();
+  }
+
+  function shareTelegram() {
+    const text = encodeURIComponent(
+      'Я только что примерила макияж ✨ Попробуй и ты — сделай селфи'
+    );
+    const url = encodeURIComponent(location.href);
+    tg.openTelegramLink(`https://t.me/share/url?url=${url}&text=${text}`);
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     show('screen-select');
