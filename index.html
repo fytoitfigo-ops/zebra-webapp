@@ -1,211 +1,161 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Zebra Makeup</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zebra Makeup</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #fff;
-      color: #000;
-    }
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    .screen {
-      display: none;
-      height: 100vh;
-      padding: 16px;
-      box-sizing: border-box;
-    }
+<style>
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f5f5f5;
+    color: #000;
+}
 
-    h2 { margin-top: 0; }
+header {
+    text-align: center;
+    padding: 20px;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: none;
-      background: #000;
-      color: #fff;
-    }
+h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
 
-    .secondary {
-      background: #f0f0f0;
-      color: #000;
-    }
+.subtitle {
+    font-size: 16px;
+    color: #666;
+}
 
-    .hint, .note {
-      font-size: 14px;
-      opacity: 0.7;
-      margin-top: 10px;
-    }
+.container {
+    padding: 16px;
+}
 
-    /* RESULT */
-    .result {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+.card {
+    position: relative;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+}
 
-    .image-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
 
-    .image-wrap img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 16px;
-    }
+.card-title {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
 
-    .actions {
-      display: flex;
-      gap: 12px;
-    }
+.hidden {
+    display: none;
+}
 
-    .actions button {
-      flex: 1;
-    }
+button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: none;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+}
 
-    textarea {
-      width: 100%;
-      height: 120px;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-  </style>
+video {
+    width: 100%;
+    border-radius: 16px;
+}
+
+.note {
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    margin: 12px 0;
+}
+</style>
 </head>
 
 <body>
 
-<!-- 1. ВЫБОР -->
-<div id="screen-select" class="screen">
-  <h2>Кому подбираем образ?</h2>
-  <button onclick="goAdult()">Для себя</button>
-  <button onclick="goKids()">Для ребёнка</button>
+<!-- ЭКРАН 1 -->
+<div id="screen-start">
+    <header>
+        <h1>Кому подбираем образ?</h1>
+        <div class="subtitle">Выбери вариант и сделай селфи</div>
+    </header>
+
+    <div class="container">
+        <div class="card" onclick="goSelfie('adult')">
+            <img src="adult.jpg" alt="Для себя">
+            <div class="card-title">Для себя · Вечерний образ</div>
+        </div>
+
+        <div class="card" onclick="goSelfie('child')">
+            <img src="child.jpg" alt="Для ребёнка">
+            <div class="card-title">Для ребёнка · Весёлые маски</div>
+        </div>
+    </div>
 </div>
 
-<!-- 2. ВЗРОСЛЫЙ -->
-<div id="screen-adult" class="screen">
-  <h2>Вечерний образ</h2>
-  <p>Сделай селфи и примерь свой макияж</p>
-  <button onclick="goSelfie()">Сделать селфи</button>
-</div>
+<!-- ЭКРАН 2 -->
+<div id="screen-selfie" class="hidden">
+    <header>
+        <h1>Сделай селфи</h1>
+        <div class="subtitle">Хороший свет и нейтральное выражение лица</div>
+    </header>
 
-<!-- 3. ДЕТСКИЙ -->
-<div id="screen-kids" class="screen">
-  <h2>Детский образ</h2>
-  <p>Лёгкий и аккуратный макияж для праздника</p>
-  <button onclick="goSelfie()">Продолжить</button>
-</div>
-
-<!-- 4. СЕЛФИ -->
-<div id="screen-selfie" class="screen">
-  <h2>Сделай селфи</h2>
-  <p class="hint">
-    Хороший свет и нейтральное выражение лица помогут получить лучший результат
-  </p>
-
-  <input type="file" accept="image/*" capture="user" id="selfieInput" style="display:none">
-  <button onclick="openCamera()">Сделать селфи</button>
-</div>
-
-<!-- 5. РЕКОМЕНДАЦИИ -->
-<div id="screen-tips" class="screen">
-  <h2>Небольшие рекомендации</h2>
-  <p>
-    Мы слегка усилили взгляд и добавили глубину глазам.<br>
-    Тон кожи сделали более свежим и ровным.<br>
-    Губы подчеркнули мягким, выразительным оттенком.
-  </p>
-  <button onclick="goResult()">Посмотреть результат</button>
-</div>
-
-<!-- 6. РЕЗУЛЬТАТ -->
-<div id="screen-result" class="screen result">
-  <h2>Твой образ готов ✨</h2>
-
-  <div class="image-wrap">
-    <img id="resultImage">
-  </div>
-
-  <div class="actions">
-    <button onclick="saveImage()">Сохранить</button>
-    <button onclick="shareTelegram()">Поделиться</button>
-  </div>
-
-  <button class="secondary" onclick="goFeedback()">Оставить отзыв</button>
-</div>
-
-<!-- 7. ФИДБЭК -->
-<div id="screen-feedback" class="screen">
-  <h2>Нам важно твоё мнение</h2>
-  <p class="hint">
-    Что понравилось? Что бы ты улучшила?
-  </p>
-
-  <textarea placeholder="Напиши пару слов..."></textarea>
-  <button onclick="goSelect()">Отправить</button>
+    <div class="container">
+        <video id="video" autoplay playsinline></video>
+        <div class="note">Камера включится автоматически</div>
+        <button onclick="takePhoto()">Сделать селфи</button>
+        <br><br>
+        <button onclick="openFeedback()">Оставить отзыв</button>
+    </div>
 </div>
 
 <script>
-  const tg = window.Telegram.WebApp;
-  tg.ready();
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-  let selfieImage = null;
+let stream = null;
 
-  function show(id) {
-    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-  }
+function goSelfie(type) {
+    document.getElementById('screen-start').classList.add('hidden');
+    document.getElementById('screen-selfie').classList.remove('hidden');
+    startCamera();
+}
 
-  function goSelect() { show('screen-select'); }
-  function goAdult() { show('screen-adult'); }
-  function goKids() { show('screen-kids'); }
-  function goSelfie() { show('screen-selfie'); }
-  function goResult() { show('screen-result'); }
-  function goFeedback() { show('screen-feedback'); }
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(s => {
+            stream = s;
+            document.getElementById('video').srcObject = stream;
+        })
+        .catch(err => {
+            alert("Не удалось открыть камеру");
+            console.error(err);
+        });
+}
 
-  function openCamera() {
-    document.getElementById('selfieInput').click();
-  }
+function takePhoto() {
+    alert("Селфи сделано (этап тестирования)");
+}
 
-  document.getElementById('selfieInput').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    selfieImage = URL.createObjectURL(file);
-    document.getElementById('resultImage').src = selfieImage;
-    show('screen-tips');
-  });
-
-  function saveImage() {
-    const a = document.createElement('a');
-    a.href = selfieImage;
-    a.download = 'zebra-makeup.jpg';
-    a.click();
-  }
-
-  function shareTelegram() {
-    const text = encodeURIComponent(
-      'Я только что примерила макияж ✨ Попробуй и ты — сделай селфи'
-    );
-    const url = encodeURIComponent(location.href);
-    tg.openTelegramLink(`https://t.me/share/url?url=${url}&text=${text}`);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    show('screen-select');
-  });
+function openFeedback() {
+    tg.openTelegramLink("https://t.me/USERNAME_ЧАТА");
+}
 </script>
 
 </body>
