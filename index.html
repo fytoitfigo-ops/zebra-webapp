@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Zebra Makeup</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -11,35 +11,26 @@
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #f5f5f5;
-    color: #000;
-}
-
-header {
-    text-align: center;
-    padding: 20px;
+    background: #f4f4f4;
 }
 
 h1 {
     font-size: 26px;
-    margin-bottom: 10px;
+    text-align: center;
+    margin: 16px;
 }
 
 .subtitle {
-    font-size: 16px;
+    text-align: center;
     color: #666;
-}
-
-.container {
-    padding: 16px;
+    margin-bottom: 16px;
 }
 
 .card {
-    position: relative;
-    margin-bottom: 20px;
+    margin: 16px;
     border-radius: 16px;
     overflow: hidden;
-    cursor: pointer;
+    position: relative;
 }
 
 .card img {
@@ -50,111 +41,81 @@ h1 {
 
 .card-title {
     position: absolute;
-    bottom: 16px;
-    left: 16px;
+    bottom: 12px;
+    left: 12px;
     color: #fff;
     font-size: 22px;
     font-weight: bold;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-.hidden {
-    display: none;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
 
 button {
-    width: 100%;
+    width: calc(100% - 32px);
+    margin: 16px;
     padding: 14px;
     font-size: 18px;
     border-radius: 12px;
     border: none;
     background: #000;
     color: #fff;
-    cursor: pointer;
 }
 
-video {
-    width: 100%;
-    border-radius: 16px;
-}
-
-.note {
-    font-size: 14px;
-    color: #555;
-    text-align: center;
-    margin: 12px 0;
+.hidden {
+    display: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ЭКРАН 1 -->
+<!-- ЭКРАН ВЫБОРА -->
 <div id="screen-start">
-    <header>
-        <h1>Кому подбираем образ?</h1>
-        <div class="subtitle">Выбери вариант и сделай селфи</div>
-    </header>
+    <h1>Кому подбираем образ?</h1>
+    <div class="subtitle">Выбери вариант</div>
 
-    <div class="container">
-        <div class="card" onclick="goSelfie('adult')">
-            <img src="adult.jpg" alt="Для себя">
-            <div class="card-title">Для себя · Вечерний образ</div>
-        </div>
+    <div class="card" onclick="goSelfie()">
+        <img src="https://YOUR_URL/adult.jpg">
+        <div class="card-title">Для себя · Вечерний образ</div>
+    </div>
 
-        <div class="card" onclick="goSelfie('child')">
-            <img src="child.jpg" alt="Для ребёнка">
-            <div class="card-title">Для ребёнка · Весёлые маски</div>
-        </div>
+    <div class="card" onclick="goSelfie()">
+        <img src="https://YOUR_URL/child.jpg">
+        <div class="card-title">Для ребёнка · Весёлые маски</div>
     </div>
 </div>
 
-<!-- ЭКРАН 2 -->
+<!-- ЭКРАН СЕЛФИ -->
 <div id="screen-selfie" class="hidden">
-    <header>
-        <h1>Сделай селфи</h1>
-        <div class="subtitle">Хороший свет и нейтральное выражение лица</div>
-    </header>
+    <h1>Сделай селфи</h1>
+    <div class="subtitle">Камера откроется сразу</div>
 
-    <div class="container">
-        <video id="video" autoplay playsinline></video>
-        <div class="note">Камера включится автоматически</div>
-        <button onclick="takePhoto()">Сделать селфи</button>
-        <br><br>
-        <button onclick="openFeedback()">Оставить отзыв</button>
-    </div>
+    <input
+        type="file"
+        accept="image/*"
+        capture="user"
+        style="display:none"
+        id="cameraInput"
+        onchange="photoTaken()"
+    >
+
+    <button onclick="openCamera()">Сделать селфи</button>
 </div>
 
 <script>
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-let stream = null;
-
-function goSelfie(type) {
+function goSelfie() {
     document.getElementById('screen-start').classList.add('hidden');
     document.getElementById('screen-selfie').classList.remove('hidden');
-    startCamera();
 }
 
-function startCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(s => {
-            stream = s;
-            document.getElementById('video').srcObject = stream;
-        })
-        .catch(err => {
-            alert("Не удалось открыть камеру");
-            console.error(err);
-        });
+function openCamera() {
+    document.getElementById('cameraInput').click();
 }
 
-function takePhoto() {
-    alert("Селфи сделано (этап тестирования)");
-}
-
-function openFeedback() {
-    tg.openTelegramLink("https://t.me/USERNAME_ЧАТА");
+function photoTaken() {
+    alert("Селфи получено ✅ (тестовый режим)");
 }
 </script>
 
