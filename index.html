@@ -2,16 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zebra Makeup</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 0;
       background: #121212;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #fff;
     }
 
@@ -20,157 +19,50 @@
     }
 
     h1 {
-      margin: 0 0 20px;
       font-size: 28px;
+      margin-bottom: 16px;
     }
 
     .card {
       background: #1e1e1e;
       border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-    .card:hover {
-      background: #2a2a2a;
+    .card img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: block;
     }
 
     .card-title {
       font-size: 20px;
-      font-weight: 600;
+      margin-bottom: 6px;
     }
 
-    .card-desc {
-      font-size: 14px;
-      color: #aaa;
-      margin-top: 4px;
-    }
-
-    .step {
-      display: flex;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid #2a2a2a;
-    }
-
-    .step:last-child {
-      border-bottom: none;
-    }
-
-    input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
-      accent-color: #f5c542;
-      margin-top: 2px;
-    }
-
-    .step-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .step-desc {
-      font-size: 13px;
-      color: #aaa;
-      margin-top: 2px;
-    }
-
-    .back {
-      color: #aaa;
-      margin-bottom: 16px;
-      cursor: pointer;
-      font-size: 14px;
+    .card-text {
+      font-size: 15px;
+      color: #bdbdbd;
+      line-height: 1.4;
     }
   </style>
 </head>
 
 <body>
-<div class="app" id="app"></div>
+  <div class="app">
+    <h1>Zebra Makeup</h1>
 
-<script>
-  const app = document.getElementById("app");
+    <div class="card">
+      <img src="assets/images/tiger.jpg" alt="Макияж — пример" />
 
-  const makeups = {
-    evening: {
-      title: "🌙 Вечерний макияж",
-      steps: [
-        { title: "Тон лица", desc: "Выровнять кожу, 1–2 слоя" },
-        { title: "Контурирование", desc: "Подчеркнуть скулы, мягкая растушёвка" },
-        { title: "Глаза", desc: "Затемнение века, 2–3 слоя" },
-        { title: "Подводка и ресницы", desc: "Акцент на внешний угол" },
-        { title: "Губы", desc: "Насыщенный акцент" }
-      ]
-    },
-    day: {
-      title: "☀️ Дневной макияж",
-      steps: [
-        { title: "Тон лица", desc: "Лёгкое выравнивание, 1 слой" },
-        { title: "Брови", desc: "Естественное заполнение" },
-        { title: "Глаза", desc: "Нюдовые оттенки, 1 слой" },
-        { title: "Ресницы", desc: "Лёгкий акцент" },
-        { title: "Губы", desc: "Натуральный оттенок" }
-      ]
-    },
-    wedding: {
-      title: "💍 Свадебный макияж",
-      steps: [
-        { title: "Подготовка кожи", desc: "Увлажнение + база" },
-        { title: "Тон лица", desc: "Стойкий, но естественный" },
-        { title: "Глаза", desc: "Мягкое сияние, растушёвка" },
-        { title: "Ресницы", desc: "Объём + длина" },
-        { title: "Губы", desc: "Нежный стойкий цвет" }
-      ]
-    }
-  };
-
-  function showMain() {
-    app.innerHTML = `
-      <h1>Zebra Makeup</h1>
-
-      <div class="card" onclick="showMakeup('evening')">
-        <div class="card-title">🌙 Вечерний макияж</div>
-        <div class="card-desc">Пошаговое выполнение</div>
+      <div class="card-title">Вечерний макияж</div>
+      <div class="card-text">
+        Спокойный, мягкий образ шаг за шагом.  
+        Без спешки, просто и понятно.
       </div>
-
-      <div class="card" onclick="showMakeup('day')">
-        <div class="card-title">☀️ Дневной макияж</div>
-        <div class="card-desc">Лёгкий и естественный</div>
-      </div>
-
-      <div class="card" onclick="showMakeup('wedding')">
-        <div class="card-title">💍 Свадебный макияж</div>
-        <div class="card-desc">Стойкий и нежный</div>
-      </div>
-    `;
-  }
-
-  function showMakeup(type) {
-    const makeup = makeups[type];
-
-    app.innerHTML = `
-      <div class="back" onclick="showMain()">← Назад</div>
-      <h1>${makeup.title}</h1>
-
-      ${makeup.steps.map(step => `
-        <div class="step">
-          <input type="checkbox">
-          <div>
-            <div class="step-title">${step.title}</div>
-            <div class="step-desc">${step.desc}</div>
-          </div>
-        </div>
-      `).join("")}
-    `;
-  }
-
-  if (window.Telegram && Telegram.WebApp) {
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-  }
-
-  showMain();
-</script>
+    </div>
+  </div>
 </body>
 </html>
