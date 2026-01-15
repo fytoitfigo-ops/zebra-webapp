@@ -2,146 +2,133 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zebra Makeup — Вечерний образ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Zebra Makeup</title>
+
+  <!-- Telegram WebApp -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f7f7f7;
-      color: #222;
     }
 
-    .container {
+    body {
+      background: #0f0f0f;
+      color: #ffffff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: 100%;
       max-width: 420px;
-      margin: 0 auto;
-      padding: 16px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
     }
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 16px;
+    .title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
     .image-wrapper {
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      margin-bottom: 20px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
     }
 
     .image-wrapper img {
-      width: 100%;
-      display: block;
+      max-width: 100%;
+      max-height: 65vh;
+      border-radius: 16px;
+      object-fit: contain;
     }
 
-    .primary-button {
-      width: 100%;
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      flex: 1;
       padding: 14px;
-      font-size: 16px;
-      border: none;
       border-radius: 14px;
-      background: #000;
-      color: #fff;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
       cursor: pointer;
-      margin-bottom: 8px;
+    }
+
+    .btn-save {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .btn-share {
+      background: #2ea6ff;
+      color: #ffffff;
     }
 
     .hint {
       text-align: center;
       font-size: 12px;
-      color: #777;
-      margin-bottom: 16px;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .action-btn {
-      flex: 1;
-      padding: 10px;
-      font-size: 13px;
-      border-radius: 12px;
-      border: 1px solid #ddd;
-      background: #fff;
-      cursor: pointer;
-    }
-
-    .privacy {
-      font-size: 12px;
-      color: #888;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .subscription {
-      font-size: 13px;
-      color: #444;
-      text-align: center;
+      opacity: 0.7;
+      margin-bottom: 6px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-
-    <h1>Вечерний образ</h1>
-    <div class="subtitle">
-      Яркий, эффектный макияж для особого вечера
-    </div>
+  <div class="app">
+    <div class="title">Вечерний образ ✨</div>
 
     <div class="image-wrapper">
-      <!-- ЗАМЕНИ НАЗВАНИЕ ФАЙЛА, ЕСЛИ НУЖНО -->
-      <img src="assets/images/evening.jpg" alt="Вечерний макияж">
+      <img src="assets/images/free.jpg" alt="Вечерний макияж">
     </div>
 
-    <button class="primary-button" onclick="savePhoto()">
-      💾 Сохранить фото
-    </button>
+    <div class="buttons">
+      <button class="btn btn-save" onclick="saveImage()">Сохранить</button>
+      <button class="btn btn-share" onclick="shareImage()">Поделиться</button>
+    </div>
 
     <div class="hint">
-      Фото сохраняется только у тебя
+      Первая примерка — бесплатно
     </div>
-
-    <div class="actions">
-      <button class="action-btn" onclick="sharePhoto()">📤 Поделиться</button>
-      <button class="action-btn" onclick="copyLink()">🔗 Отправить себе</button>
-      <button class="action-btn" onclick="copyLink()">📋 Скопировать</button>
-    </div>
-
-    <div class="privacy">
-      Мы не храним и не публикуем твои фото
-    </div>
-
-    <div class="subscription">
-      Хочешь попробовать ещё образы? Это доступно по подписке
-    </div>
-
   </div>
 
   <script>
-    function savePhoto() {
-      alert("Здесь будет сохранение фото (первое — бесплатно)");
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function saveImage() {
+      const link = document.createElement("a");
+      link.href = "assets/images/free.jpg";
+      link.download = "zebra-makeup.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
-    function sharePhoto() {
-      alert("Здесь будет шаринг с добавлением ссылки на приложение");
-    }
+    function shareImage() {
+      const shareText = "Посмотри, как я выгляжу ✨\nПопробуй и ты:";
+      const appLink = "https://t.me/ТВОЙ_БОТ"; // заменишь позже
 
-    function copyLink() {
-      alert("Ссылка на приложение скопирована");
+      tg.openTelegramLink(
+        `https://t.me/share/url?url=${encodeURIComponent(appLink)}&text=${encodeURIComponent(shareText)}`
+      );
     }
   </script>
 </body>
